@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>秀髮養護打卡</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts Inter & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #f1f5f9;
+    }
+    /* 自訂精緻滾動條 */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .tap-active:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center items-start text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-700">
+
+  <!-- 仿手機主容器 (Max 430px，適配所有螢幕) -->
+  <div class="w-full max-w-[430px] min-h-screen bg-slate-50 flex flex-col shadow-2xl relative pb-10">
+
+    <!-- 頂部藍色導航列 (完美復刻截圖藍底) -->
+    <header class="bg-[#306ee8] text-white pt-10 pb-4 px-4 sticky top-0 z-30 shadow-sm flex flex-col items-center">
+      <!-- 手機頂部虛擬狀態條 (時間與電量圖標裝飾) -->
+      <div class="w-full flex justify-between items-center text-xs text-white/90 px-2 mb-2 font-medium">
+        <span id="status-time">09:41</span>
+        <div class="flex items-center space-x-1.5">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l.73-.73C8.07 19.9 10 20.65 12 20.65c4.97 0 9-4.03 9-9 0-4.97-4.03-8.65-9-8.65zm0 15.65c-3.67 0-6.65-2.98-6.65-6.65S8.33 5.35 12 5.35s6.65 2.98 6.65 6.65-2.98 6.65-6.65 6.65z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0012 4z"/></svg>
+          <!-- 電量圖標 -->
+          <div class="w-5 h-2.5 border border-white rounded-sm p-0.5 flex items-center">
+            <div class="h-full bg-white w-4/5 rounded-2xs"></div>
+          </div>
+        </div>
+      </div>
+      <!-- 標題 -->
+      <h1 class="text-xl font-bold tracking-wider">秀髮養護打卡</h1>
+    </header>
+
+    <!-- 內容主體區 -->
+    <main class="flex-1 px-4 pt-4 space-y-4">
+
+      <!-- 卡片 1: 打卡輸入表單 -->
+      <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+        <!-- 選擇日期 -->
+        <div>
+          <label class="block text-slate-700 text-sm font-bold mb-1.5 flex items-center justify-between">
+            <span>選擇日期</span>
+            <span class="text-xs text-blue-600 font-normal">行事曆選取</span>
+          </label>
+          <div class="relative">
+            <input 
+              type="date" 
+              id="record-date" 
+              class="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-slate-800 text-base font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 shadow-xs cursor-pointer tracking-wide appearance-none"
+            >
+            <div class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 養護項目選單 -->
+        <div>
+          <label class="block text-slate-700 text-sm font-bold mb-1.5">養護項目</label>
+          <div class="relative">
+            <select 
+              id="record-category"
+              class="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-slate-800 text-base font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 shadow-xs cursor-pointer appearance-none"
+            >
+              <option value="染髮">染髮</option>
+              <option value="燙髮">燙髮</option>
+              <option value="頭皮護理">頭皮護理</option>
+              <option value="護髮" selected>護髮</option>
+            </select>
+            <div class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 養護細節 / 備註 (選填) -->
+        <div>
+          <label class="block text-slate-700 text-sm font-bold mb-1.5">護理說明 / 備註 <span class="text-slate-400 font-normal text-xs">(選填)</span></label>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="record-note" 
+              placeholder="例如：結構式深層護髮、霧感茶棕、頭皮去角質"
+              class="w-full h-12 bg-white border border-slate-200 rounded-xl px-4 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 shadow-xs"
+              maxlength="30"
+            >
+          </div>
+        </div>
+
+        <!-- 打卡記錄按鈕 -->
+        <button 
+          id="btn-submit"
+          class="w-full h-12 bg-[#306ee8] hover:bg-[#255bd1] active:bg-[#1f4ebb] text-white font-bold text-base rounded-xl shadow-md shadow-blue-500/20 tap-active transition duration-150 flex items-center justify-center space-x-1"
+        >
+          <span>打卡記錄</span>
+        </button>
+      </section>
+
+      <!-- 卡片 2: 每年統計四大類養護項目 -->
+      <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+        <!-- 標題與年份選擇器 -->
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-slate-800 font-bold text-base flex items-center">
+            <span class="w-2 h-4 bg-[#306ee8] rounded-full inline-block mr-2"></span>
+            每年養護項目統計
+          </h2>
+          <div class="flex items-center space-x-1 bg-slate-100 px-2 py-1 rounded-lg">
+            <button id="btn-prev-year" class="text-slate-500 hover:text-slate-900 px-1 py-0.5 text-xs font-bold tap-active">◀</button>
+            <span id="current-year-label" class="text-xs font-bold text-slate-700 tracking-wider">2026年</span>
+            <button id="btn-next-year" class="text-slate-500 hover:text-slate-900 px-1 py-0.5 text-xs font-bold tap-active">▶</button>
+          </div>
+        </div>
+
+        <!-- 四大項目統計數據方塊 -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <!-- 染髮 -->
+          <div class="bg-blue-50/70 border border-blue-100 rounded-xl p-3 flex flex-col justify-between transition-all hover:bg-blue-50">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-slate-600 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>
+                染髮
+              </span>
+              <span class="text-[10px] bg-white text-purple-700 px-1.5 py-0.5 rounded border border-purple-200">年度</span>
+            </div>
+            <div class="mt-1 flex items-baseline justify-end">
+              <span id="stat-dye" class="text-2xl font-black text-[#306ee8]">0</span>
+              <span class="text-xs font-semibold text-[#306ee8] ml-1">次</span>
+            </div>
+          </div>
+
+          <!-- 燙髮 -->
+          <div class="bg-blue-50/70 border border-blue-100 rounded-xl p-3 flex flex-col justify-between transition-all hover:bg-blue-50">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-slate-600 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-pink-500 inline-block"></span>
+                燙髮
+              </span>
+              <span class="text-[10px] bg-white text-pink-700 px-1.5 py-0.5 rounded border border-pink-200">年度</span>
+            </div>
+            <div class="mt-1 flex items-baseline justify-end">
+              <span id="stat-perm" class="text-2xl font-black text-[#306ee8]">0</span>
+              <span class="text-xs font-semibold text-[#306ee8] ml-1">次</span>
+            </div>
+          </div>
+
+          <!-- 頭皮護理 -->
+          <div class="bg-blue-50/70 border border-blue-100 rounded-xl p-3 flex flex-col justify-between transition-all hover:bg-blue-50">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-slate-600 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-teal-500 inline-block"></span>
+                頭皮護理
+              </span>
+              <span class="text-[10px] bg-white text-teal-700 px-1.5 py-0.5 rounded border border-teal-200">年度</span>
+            </div>
+            <div class="mt-1 flex items-baseline justify-end">
+              <span id="stat-scalp" class="text-2xl font-black text-[#306ee8]">0</span>
+              <span class="text-xs font-semibold text-[#306ee8] ml-1">次</span>
+            </div>
+          </div>
+
+          <!-- 護髮 -->
+          <div class="bg-blue-50/70 border border-blue-100 rounded-xl p-3 flex flex-col justify-between transition-all hover:bg-blue-50">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-slate-600 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+                護髮
+              </span>
+              <span class="text-[10px] bg-white text-amber-700 px-1.5 py-0.5 rounded border border-amber-200">年度</span>
+            </div>
+            <div class="mt-1 flex items-baseline justify-end">
+              <span id="stat-treatment" class="text-2xl font-black text-[#306ee8]">0</span>
+              <span class="text-xs font-semibold text-[#306ee8] ml-1">次</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 總次數加總提示 -->
+        <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
+          <span>全年累計總養護</span>
+          <span class="font-bold text-slate-700"><span id="stat-total" class="text-blue-600 text-sm font-black">0</span> 次紀錄</span>
+        </div>
+      </section>
+
+      <!-- 卡片 3: 我的打卡記錄列表 (參照原圖風格) -->
+      <section class="space-y-2.5">
+        <div class="flex justify-between items-center px-1">
+          <h2 class="text-slate-900 font-bold text-base tracking-wide">我的打卡記錄</h2>
+          <span id="record-count-badge" class="text-xs text-slate-400">共 0 筆</span>
+        </div>
+
+        <!-- 歷史列表容器 -->
+        <div id="records-list" class="space-y-2.5">
+          <!-- 動態渲染清單項目 -->
+        </div>
+
+        <!-- 空狀態提示 -->
+        <div id="empty-state" class="hidden bg-white rounded-2xl py-10 px-4 text-center border border-slate-100 shadow-sm">
+          <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-slate-600">尚無打卡記錄</p>
+          <p class="text-xs text-slate-400 mt-1">選取上方日期與養護項目，開啟美髮打卡吧！</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 底部輕量 Toast 提示框 -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-sm text-white text-xs font-medium px-4 py-2.5 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center space-x-1.5">
+      <span id="toast-text">訊息通知</span>
+    </div>
+
+  </div>
+
+  <!-- JavaScript 核心功能邏輯 -->
+  <script>
+    // 預設與存儲鍵名
+    const STORAGE_KEY = 'HAIR_CARE_LOGS_DATA';
+
+    // 星期名稱映射
+    const WEEK_DAYS = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+
+    // 養護項目標籤顏色與自訂樣式
+    const CATEGORY_COLORS = {
+      '染髮': 'text-purple-600',
+      '燙髮': 'text-pink-600',
+      '頭皮護理': 'text-emerald-600',
+      '護髮': 'text-amber-600'
+    };
+
+    // 初始預設示範資料 (若 LocalStorage 為空時載入)
+    const DEFAULT_RECORDS = [
+      { id: '1', date: '2026-11-01', category: '頭皮護理', note: '淨化角質晶露 SPA' },
+      { id: '2', date: '2026-10-26', category: '護髮', note: '極致深層結構式護髮' },
+      { id: '3', date: '2026-10-18', category: '染髮', note: '霧感冷棕補染' },
+      { id: '4', date: '2026-09-12', category: '燙髮', note: '韓系氣墊燙髮' },
+      { id: '5', date: '2026-08-05', category: '護髮', note: '黑曜光感瞬效護理' },
+      { id: '6', date: '2026-06-20', category: '頭皮護理', note: '深層毛囊調理' }
+    ];
+
+    // 全域狀態
+    let records = [];
+    let selectedYear = new Date().getFullYear();
+
+    // DOM 元素引用
+    const dateInput = document.getElementById('record-date');
+    const categorySelect = document.getElementById('record-category');
+    const noteInput = document.getElementById('record-note');
+    const submitBtn = document.getElementById('btn-submit');
+    const recordsListEl = document.getElementById('records-list');
+    const emptyStateEl = document.getElementById('empty-state');
+    const recordCountBadge = document.getElementById('record-count-badge');
+    const currentYearLabel = document.getElementById('current-year-label');
+    const btnPrevYear = document.getElementById('btn-prev-year');
+    const btnNextYear = document.getElementById('btn-next-year');
+    const toastEl = document.getElementById('toast');
+    const toastText = document.getElementById('toast-text');
+
+    // 統計卡片數值元素
+    const statDye = document.getElementById('stat-dye');
+    const statPerm = document.getElementById('stat-perm');
+    const statScalp = document.getElementById('stat-scalp');
+    const statTreatment = document.getElementById('stat-treatment');
+    const statTotal = document.getElementById('stat-total');
+
+    // 初始化應用程式
+    window.onload = function () {
+      initClock();
+      initDefaultDate();
+      loadRecords();
+      renderAll();
+      bindEvents();
+    };
+
+    // 頂部時間更新
+    function initClock() {
+      const updateTime = () => {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        const timeEl = document.getElementById('status-time');
+        if (timeEl) timeEl.textContent = `${hrs}:${mins}`;
+      };
+      updateTime();
+      setInterval(updateTime, 30000);
+    }
+
+    // 初始化日期輸入框為今天 (YYYY-MM-DD)
+    function initDefaultDate() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+      selectedYear = yyyy;
+    }
+
+    // 讀取資料
+    function loadRecords() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          records = JSON.parse(saved);
+        } else {
+          records = [...DEFAULT_RECORDS];
+          saveRecords();
+        }
+      } catch (e) {
+        console.error('LocalStorage 讀取失敗', e);
+        records = [...DEFAULT_RECORDS];
+      }
+    }
+
+    // 儲存資料
+    function saveRecords() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      } catch (e) {
+        console.error('LocalStorage 寫入失敗', e);
+      }
+    }
+
+    // 事件監聽綁定
+    function bindEvents() {
+      // 打卡按鈕點擊
+      submitBtn.addEventListener('click', handleAddRecord);
+
+      // 年份切換
+      btnPrevYear.addEventListener('click', () => {
+        selectedYear--;
+        renderAll();
+      });
+
+      btnNextYear.addEventListener('click', () => {
+        selectedYear++;
+        renderAll();
+      });
+
+      // 輸入框鍵盤 Enter 支援
+      noteInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleAddRecord();
+      });
+    }
+
+    // 新增打卡資料
+    function handleAddRecord() {
+      const dateVal = dateInput.value;
+      const categoryVal = categorySelect.value;
+      const noteVal = noteInput.value.trim();
+
+      if (!dateVal) {
+        showToast('請先選擇打卡日期');
+        return;
+      }
+
+      const newRecord = {
+        id: Date.now().toString(),
+        date: dateVal,
+        category: categoryVal,
+        note: noteVal || '常規養護'
+      };
+
+      // 插入列表首位
+      records.unshift(newRecord);
+
+      // 自動將統計年份切換為該筆記錄的年份
+      const recordYear = parseInt(dateVal.split('-')[0], 10);
+      if (!isNaN(recordYear)) {
+        selectedYear = recordYear;
+      }
+
+      saveRecords();
+      renderAll();
+
+      // 清空備註並提示
+      noteInput.value = '';
+      showToast(`已成功打卡「${categoryVal}」！`);
+    }
+
+    // 刪除打卡資料
+    window.deleteRecord = function(id) {
+      records = records.filter(item => item.id !== id);
+      saveRecords();
+      renderAll();
+      showToast('打卡記錄已刪除');
+    };
+
+    // 完整渲染視圖
+    function renderAll() {
+      renderStatistics();
+      renderRecordList();
+    }
+
+    // 渲染年度統計數據
+    function renderStatistics() {
+      currentYearLabel.textContent = `${selectedYear}年`;
+
+      // 篩選當年度紀錄
+      const yearRecords = records.filter(item => {
+        const itemYear = new Date(item.date).getFullYear();
+        return itemYear === selectedYear;
+      });
+
+      let dyeCount = 0;
+      let permCount = 0;
+      let scalpCount = 0;
+      let treatmentCount = 0;
+
+      yearRecords.forEach(r => {
+        if (r.category === '染髮') dyeCount++;
+        else if (r.category === '燙髮') permCount++;
+        else if (r.category === '頭皮護理') scalpCount++;
+        else if (r.category === '護髮') treatmentCount++;
+      });
+
+      statDye.textContent = dyeCount;
+      statPerm.textContent = permCount;
+      statScalp.textContent = scalpCount;
+      statTreatment.textContent = treatmentCount;
+      statTotal.textContent = yearRecords.length;
+    }
+
+    // 渲染打卡清單
+    function renderRecordList() {
+      // 依日期由新到舊排序
+      records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      recordCountBadge.textContent = `共 ${records.length} 筆`;
+
+      if (records.length === 0) {
+        recordsListEl.innerHTML = '';
+        emptyStateEl.classList.remove('hidden');
+        return;
+      }
+
+      emptyStateEl.classList.add('hidden');
+
+      recordsListEl.innerHTML = records.map(item => {
+        const d = new Date(item.date);
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const weekDay = WEEK_DAYS[d.getDay()] || '';
+        const colorClass = CATEGORY_COLORS[item.category] || 'text-blue-600';
+
+        return `
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between transition-all hover:shadow">
+            <!-- 左側：日期與星期 (比照截圖雙層排版) -->
+            <div class="w-16 flex-shrink-0 flex flex-col">
+              <span class="text-lg font-bold text-slate-900 tracking-tight leading-none">${month}-${day}</span>
+              <span class="text-xs text-slate-400 font-medium mt-1">${weekDay}</span>
+            </div>
+
+            <!-- 中間：項目名稱與細節備註 (比照截圖居中靠左) -->
+            <div class="flex-1 px-3 flex flex-col justify-center">
+              <div class="flex items-center space-x-1.5">
+                <span class="text-base font-bold text-slate-800">${item.category}</span>
+              </div>
+              <span class="text-xs font-semibold ${colorClass} truncate mt-0.5 max-w-[160px]">
+                ${item.note ? item.note : '秀髮健康打卡'}
+              </span>
+            </div>
+
+            <!-- 右側：刪除按鈕 (粉紅色外框按鍵，完美復刻截圖按鈕質感) -->
+            <button 
+              onclick="deleteRecord('${item.id}')"
+              class="flex-shrink-0 px-3 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 active:bg-red-100 text-xs font-bold transition duration-150 tap-active shadow-xs"
+            >
+              刪除
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 輕量 Toast 彈窗
+    let toastTimeout;
+    function showToast(message) {
+      clearTimeout(toastTimeout);
+      toastText.textContent = message;
+      toastEl.classList.remove('opacity-0', 'pointer-events-none');
+      toastEl.classList.add('opacity-100', 'translate-y-[-8px]');
+
+      toastTimeout = setTimeout(() => {
+        toastEl.classList.remove('opacity-100', 'translate-y-[-8px]');
+        toastEl.classList.add('opacity-0', 'pointer-events-none');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
